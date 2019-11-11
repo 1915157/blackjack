@@ -22,7 +22,7 @@ int cardIndex = 0;
 
 //player info
 int dollar[N_MAX_USER];						//dollars that each player has
-int n_user;									//number of users
+int n_user;									//number of users - 전역으로 할 것. 
 
 
 //play yard information
@@ -30,6 +30,22 @@ int cardhold[N_MAX_USER+1][N_MAX_CARDHOLD];	//cards that currently the players h
 int cardSum[N_MAX_USER];					//sum of the cards
 int bet[N_MAX_USER];						//current betting 
 int gameEnd = 0; 							//game end flag
+
+//some utility functions
+
+//get an integer input from standard input (keyboard)
+//return : input integer value
+//         (-1 is returned if keyboard input was not integer)
+int getIntegerInput(void) {
+    int input, num;
+    
+    num = scanf("%d", &input);
+    fflush(stdin);
+    if (num != 1) //if it fails to get integer
+        input = -1;
+    
+    return input;
+}
 
 
 //card processing functions ---------------
@@ -58,7 +74,7 @@ int pullCard(void) {
 
 //playing game functions -----------------------------
 
-//player settiing
+//player settiing ---> ???
 int configUser(void) {
 	
 }
