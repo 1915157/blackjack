@@ -39,8 +39,3 @@ int configUser(void){
 		
 	}
 	
-	int main(void){
-		
-		configUser();
-		
-	}
