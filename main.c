@@ -107,30 +107,32 @@ int mixCardTray(void){
 
 }
 
+// error : total dollar doesn't change. 
 int betDollar(void){
 	
 	int dollar[N_MAX_USER];
-	dollar[n_user] = 50;
 	int bet[N_MAX_USER];
+	
 	int i;
+	
+	dollar[n_user] = 50;
+	dollar[i] = 50;
+	
 	// each round -> dollar[n_user] = dollar[n_user] - bet[n_user] ;  
 		
 	printf(" ----------- BETTING STEP -------\n");
 	printf("-> your betting (total : &%d) : ", dollar[n_user]);
 	scanf("%d", &bet[n_user] );
 	
-	dollar[i] = 50;
 	
 	for (i=0; i<n_user-1; i++){
-		
-		
 		
 		bet[i] = 1+rand()%N_MAX_BET;
 	
 		printf("-> player %d bets &%d (out of &%d)\n", i+1, bet[i], dollar[i]);
 		
-		dollar[i] = dollar[i] - bet[i];
-			
+		dollar[i] = dollar[i] - bet[i];	
+		
 	}
 	
 	printf("------------------------------\n");
