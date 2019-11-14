@@ -15,6 +15,10 @@
 #define N_MIN_ENDCARD		30
 
 
+// betting info
+int dollar[N_MAX_USER];
+int bet[N_MAX_USER];	
+
 //card tray object
 int CardTray[N_CARDSET*N_CARD];
 int cardIndex = 0;							
@@ -110,10 +114,7 @@ int mixCardTray(void){
 // error : total dollar doesn't change. 
 int betDollar(void){
 	
-	int dollar[N_MAX_USER];
-	int bet[N_MAX_USER];
-	
-	int i = 0 ;
+	int i ;
 			
 	for (i=0; i<=n_user; i++){
 		
@@ -145,7 +146,7 @@ void printCard(int cardnum){
 // print initial card status
 void printCardInitialStatus(void){
 	
-	
+
 }
 
 int getAction(void) {
