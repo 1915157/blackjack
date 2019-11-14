@@ -117,9 +117,7 @@ int betDollar(void){
 	
 	dollar[n_user] = 50;
 	dollar[i] = 50;
-	
-	// each round -> dollar[n_user] = dollar[n_user] - bet[n_user] ;  
-		
+			
 	printf(" ----------- BETTING STEP -------\n");
 	printf("-> your betting (total : &%d) : ", dollar[n_user]);
 	scanf("%d", &bet[n_user] );
@@ -130,8 +128,6 @@ int betDollar(void){
 		bet[i] = 1+rand()%N_MAX_BET;
 	
 		printf("-> player %d bets &%d (out of &%d)\n", i+1, bet[i], dollar[i]);
-		
-		dollar[i] = dollar[i] - bet[i];	
 		
 	}
 	
@@ -147,6 +143,15 @@ void printCard(int cardnum){
 // print initial card status
 void printCardInitialStatus(void){
 	
+	printf("-------CARD OFFERING -------\n");
+	printf(" --- server /t : X %d", );
+	printf("  -> you \t : %d %d", );
+	
+	for (i=0; i<n_user-1; i++){
+			
+		printf("  -> player %d \t : %d %d", i+1, , );
+		
+	}
 }
 
 int getAction(void) {
