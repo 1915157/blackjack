@@ -73,44 +73,6 @@ int configUser(void){
 		
 	}
 	
-int pullCard(void){
-	
-	int i = 1+rand()%N_CARDSET*N_CARD;
-	
-	CardTray[i];
-
-	return;
-}
-	
-
-//offering initial 2 cards
-void offerCards(void) {
-	int i;
-	//1. give two card for each players
-	for (i=0;i<n_user;i++)
-	{
-		cardhold[i][0] = pullCard();
-		cardhold[i][1] = pullCard();
-	}
-	//2. give two card for the operator
-	cardhold[n_user][0] = pullCard();
-	cardhold[n_user][1] = pullCard();
-	
-	return;
-}
-
-
-int mixCardTray(void){
-	
-	int CardTray[N_CARDSET*N_CARD] = {1,2,3,4,5,6,7,8,9,10,10,10,10,
-	1,2,3,4,5,6,7,8,9,10,10,10,10,
-	1,2,3,4,5,6,7,8,9,10,10,10,10,
-	1,2,3,4,5,6,7,8,9,10,10,10,10 }; 
-	
-	return;
-
-}
-
 // error : total dollar doesn't change. 
 int betDollar(void){
 	
@@ -139,13 +101,98 @@ int betDollar(void){
 	return;
 }
 
-void printCard(int cardnum){
+
+int mixCardTray(void){
 	
+	int i;
+	
+	for(i=0; i<N_CARDSET*N_CARD; i++)
+		CardTray[i] = i;
+
+	
+	for (i=0; i<N_CARDSET*N_CARD; i++)
+		{
+			int randNum1 = rand() % N_CARDSET*N_CARD;
+			int randNum2 = rand() % N_CARDSET*N_CARD;
+			
+			int temp;
+			
+			temp = CardTray[randNum1];
+			CardTray[randNum1] = CardTray[randNum2];
+			CardTray[randNum2] = temp;
+			
+		
+		}
+
+}
+
+int pullCard(void){ //중복되지 않게 카드를 뽑아야 함. 
+	
+	int i = 1+rand()%N_CARDSET*N_CARD;
+	
+	CardTray[i];
+
+	return;
+}
+	
+
+//offering initial 2 cards
+void offerCards(void) {
+	int i;
+	//1. give two card for each players
+	for (i=0;i<n_user;i++)
+	{
+		cardhold[i][0] = pullCard();
+		cardhold[i][1] = pullCard();
+	}
+	//2. give two card for the operator
+	cardhold[n_user][0] = pullCard();
+	cardhold[n_user][1] = pullCard();
+	
+	return;
+}
+
+void printCard(int cardnum){
+
+	int i;
+
+	// in cardtray[i], (or result of pulltray )
+	if (0<=i && i<13){
+		
+		printf("HRT%d ", cardtray[i]);
+	
+	}
+	
+	if (0<=13 && i<26){
+		
+		printf("SPD%d ", cardtray[i]);
+	
+	}
+
+	if (0<=26 && i<39){
+		
+		printf("DIA%d ", cardtray[i]);
+	
+	}
+	
+	if (0<=39 && i<52){
+		
+		printf("CLV%d ", cardtray[i]);
+	
+	}
 }
 
 // print initial card status
 void printCardInitialStatus(void){
 	
+	printf(" --- server /t : X %d", );
+	printf("  -> you \t : %d %d", );
+	
+	for (i=0; i<n_user-1; i++){
+			
+		printf("  -> player %d \t : %d %d", i+1, cardhold[i][0] ,cardhold[i][1] );
+		
+	}
 
 }
 
@@ -201,6 +248,8 @@ int main(int argc, char *argv[]) {
 		
 		betDollar();
 		offerCards(); //1. give cards to all the players
+		
+		printf("-------CARD OFFERING -------\n");
 		
 		printCardInitialStatus();
 		printf("\n------------------ GAME start --------------------------\n");
