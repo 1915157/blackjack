@@ -106,9 +106,47 @@ int mixCardTray(void){
 	
 	int i;
 	
-	for(i=0; i<N_CARDSET*N_CARD; i++)
-		CardTray[i] = i;
+	int CardTray[N_CARDSET*N_CARD] = {1,2,3,4,5,6,7,8,9,10,10,10,10,
+	1,2,3,4,5,6,7,8,9,10,10,10,10,
+	1,2,3,4,5,6,7,8,9,10,10,10,10,
+	1,2,3,4,5,6,7,8,9,10,10,10,10};
+	
+	char CardNum;
+	
+	char HRT[13] = {'HRT A','HRT 2','HRT 3','HRT 4','HRT 5','HRT 6','HRT 7','HRT 8','HRT 9','HRT 10','HRT J','HRT Q','HRT K'};
+	char SPD[13] = {'SPD A','SPD 2','SPD 3','SPD 4','SPD 5','SPD 6','SPD 7','SPD 8','SPD 9','SPD 10','SPD J','SPD Q','SPD K'};
+	char CLV[13] = {'CLV A','CLV 2','CLV 3','CLV 4','CLV 5','CLV 6','CLV 7','CLV 8','CLV 9','CLV 10','CLV J','CLV Q','CLV K'};
+	char DIA[13] = {'DIA A','DIA 2','DIA 3','DIA 4','DIA 5','DIA 6','DIA 7','DIA 8','DIA 9','DIA 10','DIA J','DIA Q','DIA K'};
+	
+	for (i=0; i<13; i++){
+		
+		CardTray[i] = CardNum;
+		CardNum = HRT[i];
+	
+	}
+	
+		for (i=13; i<26; i++){
+		
+		CardTray[i] = CardNum;
+		CardNum = SPD[i];
+	
+	}
+	
+		for (i=26; i<39; i++){
+		
+		CardTray[i] = CardNum;
+		CardNum = CLV[i];
+		
+	}
+	
+		for (i=39; i<52; i++){
+		
+		CardTray[i] = CardNum;
+		CardNum = DIA[i];
+	
+	}
 
+	
 	
 	for (i=0; i<N_CARDSET*N_CARD; i++)
 		{
@@ -119,18 +157,16 @@ int mixCardTray(void){
 			
 			temp = CardTray[randNum1];
 			CardTray[randNum1] = CardTray[randNum2];
-			CardTray[randNum2] = temp;
-			
+			CardTray[randNum2] = temp;	
 		
 		}
 
 }
 
-int pullCard(void){ //중복되지 않게 카드를 뽑아야 함. 
+int pullCard(void){ // 카드를 뽑아야 함. 
 	
-	int i = 1+rand()%N_CARDSET*N_CARD;
-	
-	CardTray[i];
+	CardTray[cardIndex];
+	cardIndex = cardIndex + 1;
 
 	return;
 }
@@ -149,44 +185,21 @@ void offerCards(void) {
 	cardhold[n_user][0] = pullCard();
 	cardhold[n_user][1] = pullCard();
 	
+	//3. give two card for the dealer
+	cardhold[n_user+1][0] = pullCard();
+	cardhold[n_user+1][1] = pullCard();	
+
 	return;
 }
 
-void printCard(int cardnum){
-
-	int i;
-
-	// in cardtray[i], (or result of pulltray )
-	if (0<=i && i<13){
-		
-		printf("HRT%d ", cardtray[i]);
-	
-	}
-	
-	if (0<=13 && i<26){
-		
-		printf("SPD%d ", cardtray[i]);
-	
-	}
-
-	if (0<=26 && i<39){
-		
-		printf("DIA%d ", cardtray[i]);
-	
-	}
-	
-	if (0<=39 && i<52){
-		
-		printf("CLV%d ", cardtray[i]);
-	
-	}
-}
 
 // print initial card status
 void printCardInitialStatus(void){
 	
-	printf(" --- server /t : X %d", );
-	printf("  -> you \t : %d %d", );
+	int i;
+	
+	printf(" --- server /t : X %d",cardhold[n_user+1][0] );
+	printf("  -> you \t : %d %d",cardhold[n_user][0], cardhold[n_user][1] );
 	
 	for (i=0; i<n_user-1; i++){
 			
