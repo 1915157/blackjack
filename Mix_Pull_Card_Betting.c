@@ -174,8 +174,12 @@ int calcStepResult(int user, int n_morecard[user]) {
 			// 만약에 go를 받음 -> pullcard, printcard.
 	for(i=0; i<n_morecard[user] + 2; i++)
 	{
+		// 실질적인 카드 숫자로 계산, cardNum은 1~52까지이므로.. 변환 필요!  
+		
 		if (cardNum == 11 || cardNum == 12 || cardNum == 13 )
-			
+			cardhold[user][i] = 10;
+		else if (cardNum == 24 || cardNum == 25 || cardNum == 26)
+			cardhold[user][i] = 
 		sum = sum + cardhold[user][i];
 	}
 	

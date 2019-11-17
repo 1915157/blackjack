@@ -110,6 +110,24 @@ int betDollar(void){
 int getAction(void) {
 	// player의 현재 카드합이 17미만 - go 
 	// player의 현재 카드합이 17이상이면 stop. 
+	printf("\t ::: Action? (0- - go, others - stay)  : \n");
+	scanf("%d", &GoStopAnswer);
+	printf(" %d", GoStopAnswer);	
+		
+		if (GoStopAnswer == 0)
+			{
+				do
+				{
+					n_morecard[n_user]++;
+						
+					cardhold[n_user][(n_morecard[n_user] + 2 )] = pullCard();
+					printf(" ");
+					printCard(cardhold[n_user+1][n_morecard[n_user] + 2]);
+						
+					calcStepResult(n_user,n_morecard[n_user]);	
+						
+				} while (cardSum[n_user] >= 21); 
+
 	
 }
 
@@ -169,25 +187,7 @@ int main(int argc, char *argv[]) {
 		else if (cardSum[n_user] > 21)
 			printf("/t ::: DEAD (sum : %d) --> -$ %d ($ %d)\n", cardSum[n_user], bet[n_user], dollar[n_user] - bet[n_user]);
 		else 
-			printf("\t ::: Action? (0- - go, others - stay)  : \n");
-			scanf("%d", &GoStopAnswer);
-			printf(" %d", GoStopAnswer);	
-				if (GoStopAnswer == 0)
-				{
-					do
-					{
-						n_morecard[n_user]++;
-						
-						cardhold[n_user][(n_morecard[n_user] + 2 )] = pullCard();
-						printf(" ");
-						printCard(cardhold[n_user+1][n_morecard[n_user] + 2]);
-						
-						calcStepResult(n_user,n_morecard[n_user]);	
-						
-					} while (cardSum[n_user] >= 21); 
-					
-				
-					
+			getAction();
 					
 				}
 		//if 카드의 합이 21이면 블랙잭 -> 바로 승리 - 해당 round가 끝남 , 배팅금액 2배 얻음 
