@@ -2,6 +2,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define N_MAX_USER			5
+#define N_MAX_CARDHOLD		10
+
+extern int N_CARDSET;
+extern int N_CARD;
+extern int CardTray[];
+extern int Cardnum;
+extern int cardIndex;
+extern int n_user;
+extern int cardhold[N_MAX_USER+1][N_MAX_CARDHOLD];
+extern int cardSum[N_MAX_USER]; 					// sum of the cards
+
 int mixCardTray(void){
 	
 	int i,j;
@@ -18,7 +30,7 @@ int mixCardTray(void){
 	for (j=0; j<N_CARDSET*N_CARD; j++) // error in card shake, it doesn't work
 		{
 			
-			randNum1 = rand() % N_CARDSET*N_CARD;
+			randNum1 = rand() % (N_CARDSET*N_CARD);
 			
 			temp = CardTray[j];
 			CardTray[j] = CardTray[randNum1];
@@ -176,9 +188,9 @@ int calcStepResult(int user, int n_morecard[user]) {
 	{
 		// 실질적인 카드 숫자로 계산, cardNum은 1~52까지이므로.. 변환 필요!  
 		
-		if (cardNum == 11 || cardNum == 12 || cardNum == 13 )
+		if (Cardnum == 11 || Cardnum == 12 || Cardnum == 13 )
 			cardhold[user][i] = 10;
-		else if (cardNum == 24 || cardNum == 25 || cardNum == 26)
+		else if (Cardnum == 24 || Cardnum == 25 || Cardnum == 26)
 			cardhold[user][i] = 
 		sum = sum + cardhold[user][i];
 	}

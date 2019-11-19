@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "C:/Codes/blackjack/Mix_Pull_Card_Betting.c"
 
 #define N_CARDSET			1
 #define N_CARD				52
@@ -35,6 +36,8 @@ int cardSum[N_MAX_USER]; 					// sum of the cards
 int bet[N_MAX_USER];						//current betting
 int GoStopAnswer = 0;						// answer of go or stop
 int gameEnd = 0;							//game end flag
+
+int n_morecard[N_MAX_USER] = 0;
 
 extern int mixCardTray();
 
