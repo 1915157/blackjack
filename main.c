@@ -141,7 +141,8 @@ int pullCard(void){ // 카드를 뽑아야 함.
 	CardTray[cardIndex];
 	cardIndex++;
 
-	return;
+	return (CardTray[cardIndex]);
+	
 }
 	
 
@@ -268,12 +269,14 @@ void printUserCardStatus(int user, int cardcnt){
 		printCard(cardhold[user][i]);
 		printf(" ");
 	printf("\t  :::\n");
+	return;
+	
 }
 
 // calculate the card sum and see if : 1. under 21, 2. over 21, 3. blackjack
 // n_morecard means number of saying go! 
 
-int calcStepResult(int user, int n_morecard[user]) { 
+int calcStepResult(int user, int n_morecard[]) { 
 	// main에서 받은 n_user값 대입, 0 대입. 
 	int sum = 0;
 	int i;
@@ -303,11 +306,13 @@ int calcStepResult(int user, int n_morecard[user]) {
 }
 		 
 int getAction(void) {
+
+	int i = 0; 
 	// player의 현재 카드합이 17미만 - go 
 	// player의 현재 카드합이 17이상이면 stop. 
-	printf("\t ::: Action? (0- - go, others - stay)  : \n");
+	printf("\t ::: Action? (0- go, others - stay)  : ");
 	scanf("%d", &GoStopAnswer);
-	printf(" %d", GoStopAnswer);	
+
 		
 		if (GoStopAnswer == 0)
 			{
@@ -316,10 +321,15 @@ int getAction(void) {
 				n_morecard[n_user]++;
 						
 				cardhold[n_user][(n_morecard[n_user] + 2 )] = pullCard();
-				printf(" ");
-				printCard(cardhold[n_user+1][n_morecard[n_user] + 2]);
+								
+				printUserCardStatus(n_user, 2 + n_morecard[n_user] );				
+				
+				// for(i=0; i< n_morecard[n_user] + 2 ; i++)
+				// 	printCard(cardhold[n_user+1][i]);
 				// 합계산하고 21안넘었으면 getAction을 반복.
+				
 				getAction(); 
+				
 				} while(cardSum[n_user] >= 21);
 			
 			}
@@ -382,7 +392,7 @@ int main(int argc, char *argv[]) {
 		// check the card status ::: calcStepResult() -> 아마 카드합을 계산하는 함수. 
 		 
 		// n_user은 처음에 받음 값, n_morecard[5] = {0,0,0,0,0|으로 초기화된 상태. 
-		calcStepResult(n_user,n_morecard[n_user]); 
+		calcStepResult(n_user,n_morecard); 
 		
 		 if (cardSum[n_user] == 21 )
 		 	printf("/t ::: Black Jack! congratulation, you win!! --> + $ %d ($ %d)\n", 2* bet[n_user], dollar[n_user] + 2*bet[n_user]);
