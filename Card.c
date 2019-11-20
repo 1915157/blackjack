@@ -21,7 +21,7 @@ extern int bet[N_MAX_USER];	// betting money of each player (including user to p
 
 //card tray object
 extern int CardTray[N_CARDSET*N_CARD];
-extern int cardIndex = 0;	// total number of used card						
+extern int cardIndex;	// total number of used card						
 extern int Cardnum; // result of CardTray[];
 extern int RealCardnum; // number of card, it is different from Cardnum. it is 1~10.
  
@@ -34,19 +34,19 @@ extern int n_user;									//number of users
 extern int cardhold[N_MAX_USER+1][N_MAX_CARDHOLD]; //cards that currently the players hold
 extern int cardSum[N_MAX_USER]; 					// sum of the cards
 extern int bet[N_MAX_USER];						//current betting
-extern int gameEnd = 0;							//game end flag
+extern int gameEnd;								//game end flag
 
-extern int n_morecard = 0;							// number of Go card of user 
-extern int n_morecard_player =0;					// number of Go card of each player
-extern int n_morecard_dealer = 0;					// number of Go card of dealer
-
+extern int n_morecard; 							// number of Go card of user 
+extern int n_morecard_player;					// number of Go card of each player
+extern int n_morecard_dealer;					// number of Go card of dealer
 
 int mixCardTray(void){
 	
 	int i,j;
 	int randNum1;
-	int temp;
+	int temp; // for swap. (shuffle)
 	
+	// put the card in the array
 	for (i=0; i<(N_CARDSET*N_CARD); i++)
 	{
 		CardTray[i] = i+1;
@@ -54,8 +54,8 @@ int mixCardTray(void){
 	}
 	
 	
-
-	for (j=0; j<(N_CARDSET*N_CARD); j++) // error in card shake, it doesn't work
+	// mix the card sets
+	for (j=0; j<(N_CARDSET*N_CARD); j++) 
 		{
 			randNum1 = rand() % (N_CARD * N_CARDSET);
 						
@@ -68,19 +68,19 @@ int mixCardTray(void){
 	return;
 }
 
-
-int pullCard(void){ // 카드를 뽑아야 함. 
+// get one card from the tray
+int pullCard(void){  
 	
 	CardTray[cardIndex];
 	cardIndex++;
 	
+	// when cardIndex >= 51, gameEnd.
 	if (cardIndex >= 51)
 		gameEnd++;
 		
 	return (CardTray[cardIndex]);
 	
 }
-	
 
 //offering initial 2 cards
 void offerCards(void) {
@@ -102,13 +102,14 @@ void offerCards(void) {
 	}
 
 	return;
-}	
+}
 
-
+// print initial card status
 void printCard(int Cardnum) {
 	
-	RealCardnum = Cardnum % 13;
+	RealCardnum = Cardnum % 13; // define variable to appears real card number(1~10) 
 	
+	// express SHAPE HRT, and Number
 	if (Cardnum/13 == 0)
 		if (Cardnum == 1)
 			printf(" HRT A");
@@ -122,6 +123,7 @@ void printCard(int Cardnum) {
 		else 
 			printf(" HRT %d", RealCardnum);
 						
+	// express SHAPE CLV, and Number					
 	else if (Cardnum/13 == 1)
 		if (Cardnum == 14)
 			printf(" CLV A");
@@ -135,7 +137,7 @@ void printCard(int Cardnum) {
 		else 
 			printf(" CLV %d", RealCardnum);
 						
-			
+	// express SHAPE SPD, and Number		
 	else if (Cardnum/13 == 2)
 		if (Cardnum == 27)
 			printf(" SPD A");
@@ -149,7 +151,7 @@ void printCard(int Cardnum) {
 		else 
 			printf(" SPD %d", RealCardnum);
 						
-			
+	// express SHAPE DIA, and Number		
 	else if (Cardnum/13 == 3 || Cardnum/13 == 4) 
 		if (Cardnum == 40)
 			printf(" DIA A");
@@ -167,21 +169,26 @@ void printCard(int Cardnum) {
 	return;
 }
 
+
 // print initial card status
 void printCardInitialStatus(){
 	
 	int i;
 	
+	// print dealer's initial card status
+	// hide one card of dealer's
 	printf(" --- server \t : X  ");
 	printCard(cardhold[n_user+1][0]);
 	printf("\n");
 	
+	// print my inital card status
 	printf("  -> you \t : " );
 	printCard(cardhold[n_user][0]);
 	printf(" ");
 	printCard(cardhold[n_user][1]);
 	printf("\n");
 	
+	// print player's initial card status
 	for (i=0; i<n_user-1; i++){
 			
 		printf("  -> player %d \t : ", i+1);
@@ -195,7 +202,7 @@ void printCardInitialStatus(){
 	return;
 }
 
-
+// print present card status
 void printUserCardStatus(int user, int cardcnt){
 	
 	int i;
@@ -204,34 +211,9 @@ void printUserCardStatus(int user, int cardcnt){
 	for(i=0; i<cardcnt; i++)
 		printCard(cardhold[user][i]);
 		printf(" ");
-	printf("\t  :::\n");
+	printf("\t  :::");
 	return;
 	
 }
 
-// calculate the card sum and see if : 1. under 21, 2. over 21, 3. blackjack
-// n_morecard means number of saying go! 
-
-// 카드합을 계산하는 함 -> user가 지금까지 가지고 있는 카드의 합을 구함.  
-int calcStepResult(int user, int n_morecard) { 
-	// main에서 받은 n_user값을 user에 대입, n_morecard = 0 대입 
-	// n_morecard 는 Go,Stop에서 go를 외쳤을 때의 카드 수 
-	int sum = 0;
-	int i;
-		
-	for(i=0; i<n_morecard + 2; i++)
-	{
-		// 현재까지 뽑은 카드가 k,Q,J에 해당되는 숫자일 때, 10으로 생각.  
-		if (cardhold[user][i] == 11 || cardhold[user][i] == 12 || cardhold[user][i] == 13 || cardhold[user][i] == 24 || cardhold[user][i] == 25 || cardhold[user][i] == 26  || cardhold[user][i] == 37 || cardhold[user][i] == 38 || cardhold[user][i] == 39 || cardhold[user][i] == 50  || cardhold[user][i] == 51  || cardhold[user][i] == 52 )
-			{
-				sum = sum + 10;		// RealCardnum = 10; 실제카드값은 10이므로. 
-			}
-		else	
-			sum = sum + (cardhold[user][i] % 13);
-	}
 	
-	cardSum[user] = sum; 		
-		 
-	return;
-}
-		 
