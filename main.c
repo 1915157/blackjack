@@ -38,9 +38,9 @@ int cardSum[N_MAX_USER]; 					// sum of the cards
 int bet[N_MAX_USER];						//current betting
 int gameEnd;								//game end flag
 
-int n_morecard; 							// number of Go card of user 
-int n_morecard_player;					// number of Go card of each player
-int n_morecard_dealer;					// number of Go card of dealer
+int n_morecard = 0; 							// number of Go card of user 
+int n_morecard_player = 0;					// number of Go card of each player
+int n_morecard_dealer = 0;					// number of Go card of dealer
 
 // use instead of scanf because when I put another letter, it errors
 int getIntegerInput(void) {
@@ -105,11 +105,9 @@ int betDollar(void){
 	return;
 }
 
-
-// calculate the card sum and see if : 1. under 21, 2. over 21, 3. blackjack
  
 
-// 카드합을 계산하는 함 -> user가 지금까지 가지고 있는 카드의 합을 구함. 
+
 // calculate the card sum that user has until now 
 int calcStepResult(int user, int n_morecard) { 
 	// main에서 받은 n_user값을 user에 대입, n_morecard = 0 대입 
@@ -135,16 +133,10 @@ int calcStepResult(int user, int n_morecard) {
 }
 		 
 // when cardSum[user] < 21, decide GO? STOP? 		 
-int getAction(void) {
+int getAction(int GoStopAnswer) {
 
 	int i = 0; 
-	int GoStopAnswer;						// user's answer of go or stop
-
 	
-	printf("\t ::: Action? (0 - go, 1 - stay)  : ");
-	scanf("%d", &GoStopAnswer);
-
-		
 		if (GoStopAnswer == 0)
 			{	
 				
@@ -170,6 +162,7 @@ int getAction(void) {
 	return (cardSum[n_user]);
 
 }
+
 
 // after the round, print result of player in the round (result of win or lose and the reason of that, plus or minus from each player's dollar) 
 int checkResult(int user) {
@@ -199,12 +192,18 @@ int checkResult(int user) {
 					printf("win (sum : %d) --> $ %d\n", cardSum[user], dollar[user] );
 				}
 				
-			else if (cardSum[user] < cardSum[n_user + 1 ])
+			else if (cardSum[user] < cardSum[n_user + 1 ] && cardSum[n_user + 1 ] < 21)
 				{
 				
 				dollar[user] = dollar[user] - bet[user];
 				printf("lose! (sum : %d) --> $ %d\n", cardSum[user], dollar[user] );
-				
+					
+					// if someone bankrupt, end round and game over.
+					if (dollar[user] == 0)
+					{
+						printf("bankrupted! game will be ended\n");
+						gameEnd++; 	
+					}
 				}
 		}	
 		
@@ -254,6 +253,9 @@ int main(int argc, char *argv[]) {
 	int max_user;
 	int i,j;
 	int GoStopAnswer; 
+	
+	for(i=0; i<N_MAX_USER + 1 ; i++)
+		cardSum[i] = 0;
 	
 	srand((unsigned)time(NULL));
 	
@@ -317,7 +319,18 @@ int main(int argc, char *argv[]) {
 				}
 		 // 1< cardSum < 21, -> GO? STOP? ::: getAction()
 		 	else 
-				getAction(); 
+				{
+					do
+					{
+	
+						printf("\t ::: Action? (0 - go, 1 - stay)  : ");
+						scanf("%d", &GoStopAnswer);
+	
+					} while (GoStopAnswer != 0 && GoStopAnswer != 1 );
+					
+					getAction(GoStopAnswer); 
+
+				}
 					
 		
 		} while(cardSum[n_user] < 21 && GoStopAnswer == 0 ); // do until user dies or user says stop.
@@ -373,6 +386,8 @@ int main(int argc, char *argv[]) {
 					}
 				
 			} while( cardSum[i] < 17 );
+		
+			n_morecard_player = 0; // initialize n_moreplayer for another player
 		}
 		
 	// dealer turn
@@ -381,7 +396,8 @@ int main(int argc, char *argv[]) {
 			
 		do		
 		{
-				
+			calcStepResult(n_user+1,n_morecard_dealer);
+	
 			// if dealer is BLACKJACK - other players lose except other players BLACKJACK.  
 			 if (cardSum[n_user + 1] == 21 )
 				printf("\t ::: [[[[[[[  server result is Black Jack!  ]]]]]]] \n");
@@ -391,6 +407,7 @@ int main(int argc, char *argv[]) {
 			 else if (cardSum[n_user + 1] > 21)	 
 		 		{
 				  printf("\t ::: server DEAD (sum : %d) \n ", cardSum[n_user + 1]);
+				  // 매번 dealer의 cardSum = 52로 나옴..? 
 				  printf("[[[[[[[ server result is . . . . . . . . overflow!!]]]]]]]\n"); 
 				}
 				
@@ -398,12 +415,12 @@ int main(int argc, char *argv[]) {
 			 else 
 		    	{
 				 if (cardSum[n_user + 1] >= 17)
-		 			printf("\t ::: ");
+		 			printf("\t ::: \n");
 				
 				 else if (cardSum[n_user + 1] < 17)
 		 			{
 					 	
-					 		printf("\t ::: GO!");
+					 		printf("\t ::: GO!\n");
 					 		
 					 		
 					 		cardhold[n_user + 1 ][n_morecard_dealer + 2] = pullCard();
@@ -417,7 +434,7 @@ int main(int argc, char *argv[]) {
 					}
 					
 				} 
-		} while(cardSum[n_user+1] < 21 || cardSum[n_user+1] < 17);
+		} while(cardSum[n_user+1] < 17);
 				
 				printf("[[[[[[[ server result is . . . . %d ]]]]]]]\n", cardSum[n_user+1]); // location is unstable 위치 아직 미확정 
 			
@@ -438,7 +455,10 @@ int main(int argc, char *argv[]) {
 		
 		// 여기서 만약 한명이 파산 -> gameEnd++   
 		
-	
+			
+	//initialize cardSum array after finish the round. 	
+	for(i=0; i<n_user+1; i++)	
+		cardSum[i] = 0;
 		
 	// game ends when running out of cardtray (cardindex)	
 	if (cardIndex >= 51)
