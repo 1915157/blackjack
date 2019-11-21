@@ -15,26 +15,22 @@
 
 #define N_MIN_ENDCARD		30
 
-// betting info
-extern int dollar[N_MAX_USER]; // dollar of each player (including user to player_max)
-extern int bet[N_MAX_USER];	// betting money of each player (including user to player_max)
-
 //card tray object
-extern int CardTray[N_CARDSET*N_CARD];
+extern int CardTray[N_CARDSET*N_CARD]; // CardTray has max 52 cards.
 extern int cardIndex;	// total number of used card						
 extern int Cardnum; // result of CardTray[];
 extern int RealCardnum; // number of card, it is different from Cardnum. it is 1~10.
  
 
 //player info
-extern int dollar[N_MAX_USER];						//dollars that each player has
+extern int dollar[N_MAX_USER];						//dollars that each player has or dollar of each player (including user to player_max)
 extern int n_user;									//number of users
 
 // play yard information
 extern int cardhold[N_MAX_USER+1][N_MAX_CARDHOLD]; //cards that currently the players hold
-extern int cardSum[N_MAX_USER]; 					// sum of the cards
-extern int bet[N_MAX_USER];						//current betting
-extern int gameEnd;								//game end flag
+extern int cardSum[N_MAX_USER+1]; 					// sum of the cards
+extern int bet[N_MAX_USER];							//current betting, betting money of each player (including user to player_max)
+extern int gameEnd;									//game end flag
 
 extern int n_morecard; 							// number of Go card of user 
 extern int n_morecard_player;					// number of Go card of each player
@@ -107,10 +103,10 @@ void offerCards(void) {
 // print initial card status
 void printCard(int Cardnum) {
 	
-	RealCardnum = Cardnum % 13; // define variable to appears real card number(1~10) 
+	RealCardnum = (Cardnum-1) % 13 + 1; // define variable to appears real card number(1~10) 
 	
 	// express SHAPE HRT, and Number
-	if (Cardnum/13 == 0)
+	if ((Cardnum-1)/13 == 0)
 		if (Cardnum == 1)
 			printf(" HRT A");
 		else if (Cardnum == 11 )
@@ -124,7 +120,7 @@ void printCard(int Cardnum) {
 			printf(" HRT %d", RealCardnum);
 						
 	// express SHAPE CLV, and Number					
-	else if (Cardnum/13 == 1)
+	else if ((Cardnum-1)/13 == 1)
 		if (Cardnum == 14)
 			printf(" CLV A");
 		else if (Cardnum == 24)
@@ -138,7 +134,7 @@ void printCard(int Cardnum) {
 			printf(" CLV %d", RealCardnum);
 						
 	// express SHAPE SPD, and Number		
-	else if (Cardnum/13 == 2)
+	else if ((Cardnum-1)/13 == 2)
 		if (Cardnum == 27)
 			printf(" SPD A");
 		else if (Cardnum == 37)
@@ -152,7 +148,7 @@ void printCard(int Cardnum) {
 			printf(" SPD %d", RealCardnum);
 						
 	// express SHAPE DIA, and Number		
-	else if (Cardnum/13 == 3 || Cardnum/13 == 4) 
+	else if ((Cardnum-1)/13 == 3 || (Cardnum-1)/13 == 4) 
 		if (Cardnum == 40)
 			printf(" DIA A");
 		else if (Cardnum == 50)
