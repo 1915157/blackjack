@@ -36,10 +36,11 @@ extern int n_morecard; 							// number of Go card of user
 extern int n_morecard_player;					// number of Go card of each player
 extern int n_morecard_dealer;					// number of Go card of dealer
 
+//mix the card sets and put in the array
 int mixCardTray(void){
 	
-	int i,j;
-	int randNum1;
+	int i,j; // variable for repeat
+	int randNum1; 
 	int temp; // for swap. (shuffle)
 	
 	// put the card in the array
@@ -52,14 +53,14 @@ int mixCardTray(void){
 	
 	// mix the card sets
 	for (j=0; j<(N_CARDSET*N_CARD); j++) 
-		{
-			randNum1 = rand() % (N_CARD * N_CARDSET);
+	{
+		randNum1 = rand() % (N_CARD * N_CARDSET);
 						
-			temp = CardTray[j];
-			CardTray[j] = CardTray[randNum1];
-			CardTray[randNum1] = temp;	
+		temp = CardTray[j];
+		CardTray[j] = CardTray[randNum1];
+		CardTray[randNum1] = temp;	
 		
-		}
+	}
 	
 	return;
 }
@@ -80,7 +81,8 @@ int pullCard(void){
 
 //offering initial 2 cards
 void offerCards(void) {
-	int i;
+	
+	int i; // for repeat
 
 	//1. give two card for the dealer
 	cardhold[n_user+1][0] = pullCard();
@@ -159,7 +161,7 @@ void printCard(int Cardnum) {
 			printf(" DIA Q");
 		
 		else 
-			printf(" CLV %d", RealCardnum);
+			printf(" DIA %d", RealCardnum);
 	
 
 	return;
@@ -204,10 +206,15 @@ void printUserCardStatus(int user, int cardcnt){
 	int i;
 	
 	printf("       -> card : ");
+	
 	for(i=0; i<cardcnt; i++)
+	{
 		printCard(cardhold[user][i]);
 		printf(" ");
+	}
+	
 	printf("\t  :::");
+	
 	return;
 	
 }
